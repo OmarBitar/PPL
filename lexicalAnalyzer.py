@@ -59,19 +59,20 @@ class Token(Enum):
     DIV_OP     = 4
     IDENTIFIER = 5
     LITERAL    = 6
+    SEMICOLON  = 7
 
 # lexeme to token conversion
 lookup = {
     "+"      : Token.ADD_OP,
     "-"      : Token.SUB_OP,
     "*"      : Token.MUL_OP,
-    "/"      : Token.DIV_OP
+    "/"      : Token.DIV_OP,
+    "$"      : Token.SEMICOLON
 }
 
 # returns the next (lexeme, token) pair or None if EOF is reached
 def lex(input):
-    input = getNonBlank(input)
-    print(input)
+    input = getNonBlank(input) 
     c, charClass = getChar(input)
     lexeme = ""
 
@@ -79,17 +80,17 @@ def lex(input):
     if charClass == CharClass.EOF:
         return (input, None, None)
 
-    # TODO: reading letters
+    # reading letters
     if charClass == CharClass.LETTER:
         input, lexeme = addChar(input, lexeme)
         return (input, lexeme, Token.IDENTIFIER)
 
-    # TODO: reading quotes
+    # reading quotes
     if charClass == CharClass.QUOTE:
         input, lexeme = addChar(input, lexeme)
         return (input, lexeme, Token.IDENTIFIER)
 
-    # TODO: reading digits
+    # reading digits
     if charClass == CharClass.DIGIT:
         while True:
             input, lexeme = addChar(input, lexeme)
@@ -98,11 +99,19 @@ def lex(input):
                 break
         return (input, lexeme, Token.LITERAL)
 
-    # TODO: reading an operator
+    # reading an operator
     if charClass == CharClass.OPERATOR:
         input, lexeme = addChar(input, lexeme)
         if lexeme in lookup:
             return (input, lexeme, lookup[lexeme])
 
-    # TODO: anything else, raise an exception
+    # reading an operator
+    if charClass == CharClass.PUNCTUATOR:
+        input, lexeme = addChar(input, lexeme)
+        if lexeme in lookup:
+            return (input, lexeme, lookup[lexeme])
+
+    
+
+    # anything else, raise an exception
     raise Exception("Lexical Analyzer Error: unrecognized symbol was found!")

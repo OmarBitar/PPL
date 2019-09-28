@@ -149,7 +149,7 @@ if __name__ == "__main__":
 
     input = open("grammar.txt", "rt")
     grammar = loadGrammar(input)
-    printGrammar(grammar)
+    #printGrammar(grammar) #----------------------------------------------------------------------> for later
     input.close()
 
     input = open("slr_table.csv", "rt")
@@ -169,9 +169,10 @@ if __name__ == "__main__":
     source.close()
     output = []
 
+    tokenInput = input
     # main loop
     while True:
-        input, lexeme, token = lex(input)
+        tokenInput, lexeme, token = lex(tokenInput)
         if lexeme == None:
             break
         output.append((lexeme, token))
@@ -183,11 +184,12 @@ if __name__ == "__main__":
     # remove all white space from input   
     input = list(input.replace(" ", "")) 
 
+    print("input is: ",input)
     # tree building update
-    # tree = parse(input, grammar, actions, gotos)
-    # if tree:
-    #     print("Input is syntactically correct!")
-    #     print("Parse Tree:")
-    #     tree.print("")
-    # else:
-    #     print("Code has syntax errors!")
+    tree = parse(input, grammar, actions, gotos)
+    if tree:
+        print("Input is syntactically correct!")
+        print("Parse Tree:")
+        tree.print("")
+    else:
+        print("Code has syntax errors!")
