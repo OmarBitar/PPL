@@ -85,6 +85,8 @@ def parse(input, grammar, actions, gotos):
         print(input, end = " ")
         state = stack[-1]
         token = input[0]
+        print("the state is: ", state)
+        print("the token is: ", token)
         action = actions[(state, token)]
         print("action: ", end = "")
         print(action)
@@ -149,7 +151,7 @@ if __name__ == "__main__":
 
     input = open("grammar.txt", "rt")
     grammar = loadGrammar(input)
-    #printGrammar(grammar) #----------------------------------------------------------------------> for later
+    #printGrammar(grammar) 
     input.close()
 
     input = open("slr_table.csv", "rt")
@@ -169,9 +171,9 @@ if __name__ == "__main__":
     source.close()
     output = []
 
-    tokenInput = input
+    tokenInput = input.split() 
     # main loop
-    while True:
+    while True: 
         tokenInput, lexeme, token = lex(tokenInput)
         if lexeme == None:
             break
@@ -182,14 +184,15 @@ if __name__ == "__main__":
         print(lexeme, token)
 
     # remove all white space from input   
-    input = list(input.replace(" ", "")) 
+    # input = list(input.replace(" ", "")) 
+    # input = ["program","id'","end"]
 
-    print("input is: ",input)
-    # tree building update
-    tree = parse(input, grammar, actions, gotos)
-    if tree:
-        print("Input is syntactically correct!")
-        print("Parse Tree:")
-        tree.print("")
-    else:
-        print("Code has syntax errors!")
+    # #print("input is: ",input)
+    # # tree building update
+    # tree = parse(input, grammar, actions, gotos)
+    # if tree:
+    #     print("Input is syntactically correct!")
+    #     print("Parse Tree:")
+    #     tree.print("")
+    # else:
+    #     print("Code has syntax errors!")

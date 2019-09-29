@@ -1,8 +1,48 @@
-expression -> expression + term
-expression -> expression - term
-expression -> term
-term       -> term * factor
-term       -> term / factor
-term       -> factor
-factor     -> i
-factor     -> l
+pr -> program id bl .  
+bl-> cs 
+bl-> vs cs 
+vs-> var vd' 
+vd'->vd 
+vd'->vd ; vd' 
+vd->id : type 
+id-> id' 
+id-> id'id 
+type -> Integer 
+type -> Boolean 
+cd-> begin st end 
+st' -> st 
+st -> ss 
+st -> scst 
+ss -> as 
+ss -> rs 
+ss -> ws 
+as -> id 
+rs -> read id 
+ws -> write id 
+ws-> write l 
+ss -> ifs 
+ss -> ws 
+ss -> CS 
+ifs -> if be then st 
+ifs -> if be then st else st 
+ws -> while be do st 
+e -> ae 
+e ->  be 
+ae -> ae + t 
+ae -> ae – t 
+ae -> t 
+t -> t * ft 
+t -> ft 
+ft -> id 
+ft -> it 
+l -> lt 
+l -> bl 
+il -> dg 
+bl -> true 
+bl -> false 
+be -> bl 
+be -> ae > ae 
+be -> ae >= ae 
+be -> ae = ae 
+be -> ae <= ae 
+be -> ae < ae  

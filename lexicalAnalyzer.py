@@ -14,25 +14,49 @@ class CharClass(Enum):
     QUOTE      = 6
     BLANK      = 7
     OTHER      = 8
+    KEYWORD    = 9
 
 # reads the next char from input and returns its class
 def getChar(input):
     if len(input) == 0:
         return (None, CharClass.EOF)
-    c = input[0].lower()
-    if c.isalpha():
-        return (c, CharClass.LETTER)
-    if c.isdigit():
-        return (c, CharClass.DIGIT)
-    if c == '"':
-        return (c, CharClass.QUOTE)
-    if c in ['+', '-', '*', '/', '>', '=', '<']:
-        return (c, CharClass.OPERATOR)
-    if c in ['.', ':', ',', ';','$']:
-        return (c, CharClass.PUNCTUATOR)
-    if c in [' ', '\n', '\t']:
-        return (c, CharClass.BLANK)
-    return (c, CharClass.OTHER)
+    c =input[0].lower()
+    if c in [
+        "program"
+        ,"begin"
+        ,"then" 
+        ,"true" 
+        ,"false"
+        ,"var"  
+        ,"while"
+        ,"write"
+        ,"program"
+        ,"read"
+        ,"do"  
+        ,"else"
+        ,"end."
+        ,"end" 
+        ,"begin"  
+        ,"Boolean"
+        ,"integer"    
+        ]:
+        return (c,CharClass.KEYWORD)
+    else: 
+        c = list(input[0].lower())
+        for index in c:    
+            if index.isalpha():
+                return (index, CharClass.LETTER)
+            if index.isdigit():
+                return (index, CharClass.DIGIT)
+            if index == '"':
+                return (index, CharClass.QUOTE)
+            if index in ['+', '-', '*', '/', '>', '=', '<']:
+                return (index, CharClass.OPERATOR)
+            if index in [':', ',', ';']:
+                return (index, CharClass.PUNCTUATOR)
+            if index in [' ', '\n', '\t']:
+                return (index, CharClass.BLANK)
+            return (index, CharClass.OTHER)
 
 # calls getChar and getChar until it returns a non-blank
 def getNonBlank(input):
@@ -52,27 +76,74 @@ def addChar(input, lexeme):
     return (input, lexeme)
 
 # all tokens
-class Token(Enum):
-    ADD_OP     = 1
-    SUB_OP     = 2
-    MUL_OP     = 3
-    DIV_OP     = 4
-    IDENTIFIER = 5
-    LITERAL    = 6
-    SEMICOLON  = 7
+class Token(Enum): 
+    ADDITION         = 1
+    ASSIGNMENT       = 2
+    BEGIN            = 3
+    BOOLEAN_TYPE     = 4 
+    COLON            = 5
+    DO               = 6
+    ELSE = 7
+    END = 8
+    EQUAL = 9
+    FALSE = 10
+    GREATER = 11
+    GREATER_EQUAL = 12
+    IDENTIFIER = 13
+    IF = 14
+    INTEGER_LITERAL = 15
+    INTEGER_TYPE = 16
+    LESS = 17
+    LESS_EQUAL = 18
+    MULTIPLICATION = 19
+    PERIOD = 20
+    PROGRAM = 21
+    READ = 22
+    SEMICOLON = 23
+    SUBTRACTION = 24
+    THEN = 25
+    TRUE = 26
+    VAR = 27
+    WHILE = 28
+    WRITE = 29
+
 
 # lexeme to token conversion
-lookup = {
-    "+"      : Token.ADD_OP,
-    "-"      : Token.SUB_OP,
-    "*"      : Token.MUL_OP,
-    "/"      : Token.DIV_OP,
-    "$"      : Token.SEMICOLON
+lookup = { 
+    "+"      : Token.ADDITION       ,
+    ":="      : Token.ASSIGNMENT     ,
+    "begin"      : Token.BEGIN         ,
+    "Boolean"      : Token.BOOLEAN_TYPE   ,
+    ":"      : Token.COLON          ,
+    "do"      : Token.DO              ,
+    "else"      : Token.ELSE,
+    "end"      : Token.END,
+    "end."      : Token.END,
+    "="      : Token.EQUAL,
+    "false"      : Token.FALSE ,
+    ">"      : Token.GREATER ,
+    ">="      : Token.GREATER_EQUAL , 
+    "if"      : Token.IF , 
+    "<"      : Token.LESS ,
+    "<="      : Token.LESS_EQUAL ,
+    "*"      : Token.MULTIPLICATION ,
+    "."      : Token.PERIOD ,
+    "program"      : Token.PROGRAM ,
+    "read"      : Token.READ ,
+    ";"      : Token.SEMICOLON ,
+    "-"      : Token.SUBTRACTION ,
+    "then"      : Token.THEN ,
+    "true"      : Token.TRUE ,
+    "var"      : Token.VAR ,
+    "while"      : Token.WHILE ,
+    "write"      : Token.WRITE ,
+    "integer"    : Token.INTEGER_LITERAL
 }
 
 # returns the next (lexeme, token) pair or None if EOF is reached
-def lex(input):
-    input = getNonBlank(input) 
+def lex(input): 
+    input = getNonBlank(input)  
+
     c, charClass = getChar(input)
     lexeme = ""
 
@@ -97,7 +168,7 @@ def lex(input):
             c, charClass = getChar(input)
             if charClass != CharClass.DIGIT:
                 break
-        return (input, lexeme, Token.LITERAL)
+        return (input, lexeme, Token.INTEGER_TYPE)
 
     # reading an operator
     if charClass == CharClass.OPERATOR:
@@ -105,8 +176,14 @@ def lex(input):
         if lexeme in lookup:
             return (input, lexeme, lookup[lexeme])
 
-    # reading an operator
+    # reading an PUNCTUATOR
     if charClass == CharClass.PUNCTUATOR:
+        input, lexeme = addChar(input, lexeme)
+        if lexeme in lookup:
+            return (input, lexeme, lookup[lexeme])
+
+    # reading an KEYWORD
+    if charClass == CharClass.KEYWORD:
         input, lexeme = addChar(input, lexeme)
         if lexeme in lookup:
             return (input, lexeme, lookup[lexeme])
@@ -114,4 +191,5 @@ def lex(input):
     
 
     # anything else, raise an exception
+    print("error at: ",c)
     raise Exception("Lexical Analyzer Error: unrecognized symbol was found!")
